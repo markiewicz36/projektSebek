@@ -11,8 +11,23 @@ class Baza:
         imie = input("Imię:")
         nazwisko = input("Nazwisko:")
         wiek = input("Wiek:")
-        nowaOsoba = Osoba(imie, nazwisko, wiek)
+        try:
+            nowaOsoba = Osoba(imie, nazwisko, wiek)
+        except ValueError:
+            print("Nie udało się dodać użytkownika!")
         self.listaOsob.append(nowaOsoba)
+
+    def usunOsobe(self):
+        print("-------------------------------\nWpisz ID użytkownika:")
+        id = input("ID:")
+        for x, i in enumerate(self.listaOsob):
+            if i.id == id:
+                try:
+                    self.listaOsob.remove(i)
+                    print("Usunięto!")
+                except ValueError:
+                    print("Błąd!")
+
 
     def wypiszUzytkownikow(self):
         print("-------------------------------\nLista użytkowników:")
@@ -22,13 +37,17 @@ class Baza:
     def dodajSamochod(self):
         print("-------------------------------\nUzupełnij dane:")
         marka = input("Marka:")
-        nowySamochod = Samochod(marka)
+        model = input("Model:")
+        try:
+            nowySamochod = Samochod(marka, model)
+        except ValueError:
+            print("Nie udało się dodać samochodu!")
         self.listaSamochodow.append(nowySamochod)
 
     def wypiszSamochody(self):
         print("-------------------------------\nLista samochodów:")
         for x, i in enumerate(self.listaSamochodow):
-            print(x+1,i.marka)
+            print(x+1,i.marka, i.model, i.wlasciciel)
 
     def zapiszDoPliku(self):
         with open('D:\\projektSebek\\uzytkownicy.csv', mode='w') as plik_uzytkownikow:
@@ -74,7 +93,7 @@ class Osoba:
     def dodajSamochod(self, samochod):
         print("-------------------------------")
         self.listaSamochodow.append(samochod)
-        print("Samochod dodany!")
+        print("Samochod dodany do użytkownika!")
 
     def sprawdzSamochody(self):
         print("-------------------------------")
@@ -87,16 +106,19 @@ class Osoba:
         self.id = id
 
 class Samochod:
-    def __init__(self, marka):
+    def __init__(self, marka, model):
         self.marka = marka
+        self.model = model
         self.wlasciciel = "brak"
 
+    def informacjaSamochod(self):
+        print("-------------------------------")
+        print(f"Marka: {self.marka} \nModel: {self.model}\nWłaściciel: {self.wlasciciel}")
 
-def menuUzytkownikow(wybor):
-    if wybor == '1':
-        baza.dodajOsobe()
-    elif wybor == '2':
-        print("2")
+    def ustawWlasciciela(self, osoba):
+        print("-------------------------------")
+        self.wlasciciel = osoba
+        print("Właściciel zaktualizowany!")
 
 
 def wyborMenu(wybor):
@@ -112,6 +134,8 @@ def wyborMenu(wybor):
             wyborTmp = input("Wybór:")
             if wyborTmp == '1':
                 baza.dodajOsobe()
+            elif wyborTmp == '2':
+                baza.usunOsobe()
             elif wyborTmp == '3':
                 baza.wypiszUzytkownikow()
             elif wyborTmp == '4':
